@@ -1,10 +1,8 @@
-/* Gaussian and AI-created questions share the same scoring and results flow. */
-const questionGenerators = { gaussian3: { label: 'Gaussian elimination', generate: generateGaussianQuestion } };
+/* Static quiz engine: local topic packs and Gaussian questions use the same scoring flow. */
 const screens = { setup: document.querySelector('#setup-screen'), quiz: document.querySelector('#quiz-screen'), result: document.querySelector('#result-screen') };
 const ui = {
   start: document.querySelector('#start-button'), quit: document.querySelector('#quit-button'),
   countButtons: [...document.querySelectorAll('.count-button')], form: document.querySelector('#answer-form'),
-  inputs: ['x', 'y', 'z'].map(name => document.querySelector(`[name="${name}"]`)),
   equations: document.querySelector('#equation-list'), fields: document.querySelector('#answer-fields'),
   answerLabel: document.querySelector('#answer-label-row'), prompt: document.querySelector('#question-prompt'),
   current: document.querySelector('#current-number'), total: document.querySelector('#total-number'),
@@ -13,12 +11,17 @@ const ui = {
   difficulty: document.querySelector('#difficulty-tag'), feedback: document.querySelector('#feedback'),
   resultPanel: document.querySelector('#result-panel'), replay: document.querySelector('#play-again-button'),
   home: document.querySelector('#home-button'), topicForm: document.querySelector('#topic-form'),
-  topicInput: document.querySelector('#topic-input'), topicError: document.querySelector('#topic-error'),
+  topicSelect: document.querySelector('#topic-select'), topicMessage: document.querySelector('#topic-error'),
   generate: document.querySelector('#generate-button')
 };
 let selectedCount = 5;
 let session;
 
+for (const topic of window.practiceTopics) {
+  const option = document.createElement('option');
+  option.value = topic.id; option.textContent = topic.title;
+  ui.topicSelect.append(option);
+}
 ui.countButtons.forEach(button => button.addEventListener('click', () => {
   selectedCount = Number(button.dataset.count);
   ui.countButtons.forEach(option => {
@@ -28,42 +31,32 @@ ui.countButtons.forEach(button => button.addEventListener('click', () => {
   });
 }));
 ui.start.addEventListener('click', startGaussianRun);
-ui.topicForm.addEventListener('submit', createTopicQuiz);
+ui.topicForm.addEventListener('submit', startTopicRun);
 ui.form.addEventListener('submit', submitAnswer);
 ui.quit.addEventListener('click', () => showScreen('setup'));
-ui.replay.addEventListener('click', () => session.kind === 'ai' ? createTopicQuiz(null, true) : startGaussianRun());
+ui.replay.addEventListener('click', () => session.kind === 'gaussian' ? startGaussianRun() : startTopicRun(null));
 ui.home.addEventListener('click', () => showScreen('setup'));
 
 function startGaussianRun() {
-  const questions = Array.from({ length: selectedCount }, () => questionGenerators.gaussian3.generate());
+  const questions = Array.from({ length: selectedCount }, generateGaussianQuestion);
   beginRun({ kind: 'gaussian', title: 'Gaussian elimination', questions });
 }
 
-async function createTopicQuiz(event, replay = false) {
+function startTopicRun(event) {
   event?.preventDefault();
-  const topic = ui.topicInput.value.trim();
-  if (!topic) { ui.topicInput.focus(); return; }
-  ui.generate.disabled = true;
-  ui.generate.innerHTML = 'MAKING YOUR QUIZ… <span>✦</span>';
-  ui.topicError.classList.add('hidden');
-  try {
-    const response = await fetch('/api/generate-quiz', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ topic, count: selectedCount })
-    });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.error || 'The quiz could not be made. Please try again.');
-    if (!Array.isArray(data.questions) || data.questions.length !== selectedCount) throw new Error('The quiz service returned an incomplete quiz. Please try again.');
-    beginRun({ kind: 'ai', title: data.title || topic, questions: data.questions });
-  } catch (error) {
-    ui.topicError.textContent = error.message.includes('Failed to fetch')
-      ? 'I can’t reach the AI quiz service. Start the site using the Run instructions in README.md.'
-      : error.message;
-    ui.topicError.classList.remove('hidden');
-  } finally {
-    ui.generate.disabled = false;
-    ui.generate.innerHTML = 'CREATE AI QUIZ <span>✦</span>';
+  const topic = window.practiceTopics.find(item => item.id === ui.topicSelect.value);
+  if (!topic) return;
+  const questions = [];
+  while (questions.length < selectedCount) {
+    const pack = shuffle(topic.questions);
+    for (const question of pack) {
+      if (questions.length === selectedCount) break;
+      questions.push({ ...question, choices: shuffle(question.choices) });
+    }
   }
+  ui.topicMessage.textContent = `This quiz uses built-in ${topic.title} exercises. Longer runs reshuffle the question pack.`;
+  ui.topicMessage.classList.remove('hidden');
+  beginRun({ kind: 'topic', title: topic.title, questions });
 }
 
 function beginRun({ kind, title, questions }) {
@@ -84,25 +77,25 @@ function showQuestion() {
   ui.progressLabel.textContent = `${percent}% COMPLETE`;
   ui.difficulty.textContent = `${session.title.toUpperCase()} · QUESTION ${session.index + 1}`;
   ui.equations.replaceChildren();
+  ui.fields.replaceChildren();
   const checkButton = document.createElement('button');
   checkButton.id = 'check-button'; checkButton.className = 'primary-button check-button';
   checkButton.type = 'submit'; checkButton.innerHTML = 'CHECK ANSWER <span>↵</span>';
-  ui.fields.replaceChildren();
+
   if (session.kind === 'gaussian') {
     ui.prompt.innerHTML = 'Use Gaussian elimination to solve the system. Enter the values of <i>x</i>, <i>y</i>, and <i>z</i>.';
     ui.answerLabel.innerHTML = '<label class="field-label" for="answer-x">YOUR SOLUTION</label><span>Numbers, fractions, or decimals</span>';
     ui.fields.className = 'answer-fields';
-    ['x', 'y', 'z'].forEach((name, i) => {
+    ['x', 'y', 'z'].forEach(name => {
       const label = document.createElement('label'); label.className = 'answer-field';
       label.innerHTML = `<span>${name} =</span><input id="answer-${name}" name="${name}" inputmode="decimal" autocomplete="off" aria-label="${name} value" required>`;
       ui.fields.append(label);
     });
-    const q = question;
     ui.equations.className = 'equations';
     ui.equations.setAttribute('aria-label', 'System of linear equations');
-    ui.equations.replaceChildren(...q.matrix.map((row, index) => {
+    ui.equations.replaceChildren(...question.matrix.map((row, index) => {
       const line = document.createElement('div'); line.className = 'equation';
-      line.textContent = `${formatTerm(row[0], 'x', true)} ${formatTerm(row[1], 'y')} ${formatTerm(row[2], 'z')} = ${q.constants[index]}`;
+      line.textContent = `${formatTerm(row[0], 'x', true)} ${formatTerm(row[1], 'y')} ${formatTerm(row[2], 'z')} = ${question.constants[index]}`;
       return line;
     }));
   } else {
@@ -127,8 +120,7 @@ function submitAnswer(event) {
   event.preventDefault();
   if (session.answered) return;
   const question = session.questions[session.index];
-  let correct;
-  let solution;
+  let correct; let solution;
   if (session.kind === 'gaussian') {
     const inputs = ['x', 'y', 'z'].map(name => ui.fields.querySelector(`[name="${name}"]`));
     const values = inputs.map(input => parseNumber(input.value.trim()));
@@ -211,3 +203,11 @@ function parseNumber(text) {
   const value = Number(text); return Number.isFinite(value) ? value : null;
 }
 function randomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function shuffle(items) {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}

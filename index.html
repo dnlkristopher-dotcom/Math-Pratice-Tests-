@@ -4,9 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101526">
-  <meta name="description" content="Play math challenges or generate a practice quiz from any topic.">
-  <title>Gauss Quest — Make learning a game</title>
+  <meta name="description" content="Practice data science mathematics with built-in quizzes.">
+  <title>Gauss Quest — Data Science Math Practice</title>
   <link rel="stylesheet" href="style.css">
+  <script src="practice-topics.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -20,8 +21,8 @@
       <div class="hero-copy">
         <div class="eyebrow"><span>✦</span> YOUR NEXT BRAIN CHALLENGE</div>
         <h1>Pick a topic.<br><span class="gradient-text">Play to learn.</span></h1>
-        <p>Practice Gaussian elimination or ask AI to make a fresh quiz about almost any school topic.</p>
-        <div class="feature-row"><span>⚡ Instant feedback</span><span>🤖 AI-made quizzes</span><span>🏆 Beat your best</span></div>
+        <p>Choose a subject, solve practice questions, and check your answers. Learn one step at a time.</p>
+        <div class="feature-row"><span>⚡ Instant feedback</span><span>📚 Math topics</span><span>🏆 Beat your best</span></div>
       </div>
       <div class="setup-card card">
         <div class="card-kicker">READY, PLAYER ONE?</div>
@@ -37,13 +38,13 @@
         <p class="small-note">Solve 3-variable systems. No timer, just practice.</p>
       </div>
       <div class="setup-card card ai-card">
-        <div class="card-kicker">MAKE A NEW PRACTICE QUIZ</div>
-        <h2>Choose any topic</h2>
+        <div class="card-kicker">DATA SCIENCE MATH</div>
+        <h2>Pick a practice subject</h2>
         <form id="topic-form" class="topic-form">
-          <label class="field-label" for="topic-input">WHAT DO YOU WANT TO PRACTICE?</label>
-          <input id="topic-input" class="topic-input" maxlength="160" placeholder="For example: fractions, planets, or photosynthesis" required>
-          <p class="small-note topic-note">AI will create questions with choices, answers, and explanations.</p>
-          <button id="generate-button" class="primary-button" type="submit">CREATE AI QUIZ <span>✦</span></button>
+          <label class="field-label" for="topic-select">CHOOSE A SUBJECT</label>
+          <select id="topic-select" class="topic-input"></select>
+          <p class="small-note topic-note">Built-in questions and answers. No account or AI key needed.</p>
+          <button id="generate-button" class="primary-button" type="submit">START TOPIC PRACTICE <span>→</span></button>
           <p id="topic-error" class="topic-error hidden" role="status"></p>
         </form>
       </div>
