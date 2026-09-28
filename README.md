@@ -1,47 +1,28 @@
 # Gauss Quest
 
-A responsive practice website with Gaussian elimination challenges and AI-created quizzes for user-chosen topics. It uses a small Node.js server to call the OpenAI API without putting the private API key in the browser.
+A free, static math practice website. It includes Gaussian elimination plus built-in multiple-choice exercise packs for data-science mathematics. New packs based on the supplied notes cover **Matrix Algebra & Linear Systems (MM151)** and **Functions, Domains & Graphs**. Answers and explanations appear after each submission.
 
-## Run it on your computer
+There is no AI quiz generator, API key, account, or paid AI request. The practice questions are included in `practice-topics.js`. Longer runs reshuffle the selected pack and can repeat questions.
 
-You need Node.js 20 or newer and an OpenAI API key with API billing enabled. ChatGPT subscriptions and API usage are separate; each generated quiz uses API credits.
+## Run on your computer
 
-1. Open PowerShell in this folder.
-2. Set the API key for this terminal window (replace the example with your own key):
+In PowerShell opened inside this folder, run:
 
-   ```powershell
-   $env:OPENAI_API_KEY = "your-private-key"
-   ```
+```powershell
+npm.cmd start
+```
 
-3. Start the website:
+Then open `http://localhost:3000`. Keep the PowerShell window open while practicing. You can also open `index.html` directly in a browser.
 
-   ```powershell
-   npm start
-   ```
+## Publish with GitHub Pages
 
-4. Visit `http://localhost:3000` in your browser. Keep the terminal open while you use the site.
+1. Upload these files to the top level of your GitHub repository: `index.html`, `style.css`, `alice-theme.css`, `app.js`, and `practice-topics.js`. Upload the latest `practice-topics.js` whenever you add or change exercises. The quiz includes simple topic-matched diagrams, including the generated Gaussian system's augmented matrix, vector sketches, function/domain drawings, and concept illustrations for the other subjects.
+2. Commit the changes.
+3. Open **Settings → Pages**. Under **Build and deployment**, choose **Deploy from a branch**, select the branch containing the files (usually `main`) and select `/(root)`.
+4. Save and wait for GitHub Pages to publish. Share the website link shown on the Pages settings screen.
 
-The Gaussian elimination quiz works without an API key. The AI topic quiz needs the key and an internet connection. Do not paste your key into `app.js`, `index.html`, or any file you upload to a public repository.
+The files `README.md`, `package.json`, and `server.mjs` may also be kept in the repository. GitHub Pages serves the static site files directly; the Node server is only for running the site locally.
 
-## Put it online for friends
+## Add more exercises
 
-GitHub Pages by itself cannot run the private AI server. Use a hosting service that can run a Node.js web service, then:
-
-1. Upload this project to a private or public GitHub repository.
-2. Create a Node.js web service from that repository on your chosen host.
-3. Set the start command to `npm start` (or `node server.mjs`).
-4. Add `OPENAI_API_KEY` in the host’s private environment-variable settings. Do not add the real key to the repository.
-5. Deploy, open the public website link, try creating an AI quiz, and share the link with friends.
-
-Check the host’s current plan and usage limits before choosing it. AI requests use your OpenAI API account and may incur charges. The included per-process limit slows accidental repeat requests; a public launch with many visitors should use a persistent rate limiter and a hosting provider usage cap.
-
-## How to use AI quizzes
-
-Choose a question count, type a topic (for example, “fractions for beginners” or “the solar system”), and press **Create AI Quiz**. The quiz maker generates four-choice questions with answers and explanations. The answer is shown after a player checks it. The current quiz is temporary and is generated again when you replay; this version does not publish a shared topic catalog or save quizzes between visits.
-
-## Files
-
-- `index.html`, `style.css`, and `app.js` make the website.
-- `server.mjs` serves the site and safely calls the AI API from the server.
-- `package.json` defines the start command; there are no third-party packages to install.
-- `.env.example` shows the server settings. Keep your real key private.
+Edit `practice-topics.js` to add or change built-in exercise questions. Each item contains a question, four answer choices, the correct answer, and a short explanation. Since quizzes are stored as code, adding questions means editing that file and uploading the updated version to GitHub.
