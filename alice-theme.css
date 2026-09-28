@@ -183,9 +183,49 @@ body {
 .topic-visual .sequence-dot { fill: #9aafa0; }
 .topic-visual .limit-line { stroke: #b77c79; stroke-width: 1.5; stroke-dasharray: 4 4; }
 
+/* Separate Wonderland stickers decorate the page edges without covering controls. */
+.app-shell { position: relative; isolation: isolate; }
+.wonderland-stickers {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  z-index: 0;
+  pointer-events: none;
+}
+.topbar, .screen, .footer { position: relative; z-index: 1; }
+.sticker {
+  position: absolute;
+  display: block;
+  height: auto;
+  object-fit: contain;
+  opacity: .92;
+  filter: drop-shadow(0 5px 7px #3c49351c);
+}
+.sticker-cards { width: 100px; left: -82px; top: 118px; transform: rotate(-9deg); }
+.sticker-watch { width: 112px; right: -95px; top: 195px; transform: rotate(7deg); }
+.sticker-alice { width: 128px; right: -112px; top: 520px; transform: rotate(3deg); }
+.sticker-drink { width: 91px; left: -78px; top: 690px; transform: rotate(-7deg); }
+.sticker-cupcake { width: 78px; right: -77px; top: 840px; transform: rotate(5deg); }
+.sticker-queen { width: 72px; left: -65px; top: 385px; transform: rotate(-5deg); }
+.sticker-teacup { width: 78px; right: -67px; top: 395px; transform: rotate(5deg); }
+.sticker-painter { width: 112px; left: -99px; top: 500px; transform: rotate(-4deg); }
+.sticker-club { width: 43px; left: -45px; top: 585px; transform: rotate(-7deg); }
+.sticker-heart { width: 48px; right: -48px; top: 700px; transform: rotate(8deg); }
+.sticker-diamond { width: 38px; left: -38px; top: 900px; transform: rotate(10deg); }
+
 @media (max-width: 760px) {
   .app-shell { width: min(100% - 32px, 550px); }
   .hero-copy h1 { font-size: 58px; }
   .topic-visual { padding-inline: 6px; }
   .topic-visual svg { height: 100px; }
+}
+
+@media (max-width: 1220px) {
+  .wonderland-stickers { display: none; }
+}
+
+@media (max-width: 760px) {
+  .wonderland-stickers { display: block; }
+  .wonderland-stickers .sticker:not(.sticker-heart) { display: none; }
+  .sticker-heart { display: block; width: 30px; right: 4px; top: 118px; opacity: .72; }
 }

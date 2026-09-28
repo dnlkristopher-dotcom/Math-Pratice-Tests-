@@ -16,7 +16,7 @@ Then open `http://localhost:3000`. Keep the PowerShell window open while practic
 
 ## Publish with GitHub Pages
 
-1. Upload these files to the top level of your GitHub repository: `index.html`, `style.css`, `alice-theme.css`, `app.js`, and `practice-topics.js`. Upload the latest `practice-topics.js` whenever you add or change exercises. The quiz includes simple topic-matched diagrams, including the generated Gaussian system's augmented matrix, vector sketches, function/domain drawings, and concept illustrations for the other subjects.
+1. Upload the site files to the top level of your GitHub repository: `index.html`, `style.css`, `alice-theme.css`, `app.js`, and `practice-topics.js`. Also upload the complete `assets/stickers/` folder so the separate Wonderland decorations can load. Keep the folder structure the same. Upload the latest `practice-topics.js` whenever you add or change exercises. The quiz includes simple topic-matched diagrams, including the generated Gaussian system's augmented matrix, vector sketches, function/domain drawings, and concept illustrations for the other subjects.
 2. Commit the changes.
 3. Open **Settings → Pages**. Under **Build and deployment**, choose **Deploy from a branch**, select the branch containing the files (usually `main`) and select `/(root)`.
 4. Save and wait for GitHub Pages to publish. Share the website link shown on the Pages settings screen.
