@@ -20,6 +20,23 @@
       ]
     },
     {
+      id: 'matrix-systems-mm151', title: 'Matrix Algebra & Linear Systems (MM151)',
+      questions: [
+        q('Matrix A is 2×3 and matrix B is 3×4. What is the shape of AB?', ['2×4', '3×3', '4×2', '2×3'], 0, 'The inner dimensions match (3), and the product has the outer dimensions: 2×4.'),
+        q('What does the transpose Aᵀ do to a matrix?', ['Swaps its rows and columns', 'Changes every entry to its negative', 'Turns every entry into 1', 'Adds an identity matrix'], 0, 'Transposition changes rows into columns in the same order.'),
+        q('Which condition makes a matrix symmetric?', ['A = Aᵀ', 'A = A⁻¹', 'det(A) = 1', 'A has only zero entries'], 0, 'A matrix is symmetric when it equals its transpose.'),
+        q('Let A = [[2, 1, −1], [−1, 2, −2]] and B = [[1, −1], [0, −2], [4, 2]]. What is the (1,1) entry of AB?', ['−2', '2', '−6', '4'], 0, 'Take row 1 of A dotted with column 1 of B: 2·1 + 1·0 + (−1)·4 = −2.'),
+        q('What is the rank of [[1, 2], [2, 4]]?', ['1', '2', '0', '4'], 0, 'The second row is twice the first, so there is one independent row.'),
+        q('Which operation keeps the solution set of a linear system unchanged?', ['Add a multiple of one equation to another', 'Multiply an equation by zero', 'Change only the right side', 'Delete any equation'], 0, 'Adding a multiple of one row to another is an elementary row operation.'),
+        q('A system has coefficient-matrix rank 1 and augmented-matrix rank 2. What does the Frobenius theorem tell us?', ['The system has no solution', 'The system has exactly one solution', 'The system has infinitely many solutions', 'The system has three solutions'], 0, 'A system is consistent exactly when these two ranks are equal.'),
+        q('A consistent system has 3 unknowns and coefficient rank 3. How many solutions does it have?', ['Exactly one', 'Infinitely many', 'None', 'Exactly three'], 0, 'A consistent system has a unique solution when its rank equals the number of unknowns.'),
+        q('What is the determinant of [[−1, 2], [3, 2]]?', ['−8', '−2', '8', '4'], 0, 'For a 2×2 matrix, ad−bc = (−1)(2) − (2)(3) = −8.'),
+        q('When can Cramer’s rule be used to find a unique solution to a square system Ax=b?', ['When det(A) ≠ 0', 'When det(A) = 0', 'When A has a zero row', 'When b is the zero vector only'], 0, 'A nonzero determinant means the coefficient matrix is invertible.'),
+        q('What are the eigenvalues of [[0, 2], [3, 1]]?', ['3 and −2', '2 and −3', '1 and 0', '3 and 2'], 0, 'The characteristic equation is λ²−λ−6=0=(λ−3)(λ+2).'),
+        q('For an invertible matrix A, what is A⁻¹A?', ['The identity matrix I', 'The zero matrix', 'A', 'A²'], 0, 'A matrix multiplied by its inverse gives the identity matrix.')
+      ]
+    },
+    {
       id: 'calculus', title: 'Calculus & Vector Calculus',
       questions: [
         q('If f(x) = x³ − 4x, what is f′(x)?', ['3x² − 4', 'x² − 4', '3x − 4', 'x³ − 4'], 0, 'The power rule gives d(x³)/dx = 3x², and d(−4x)/dx = −4.'),
@@ -32,6 +49,29 @@
         q('What is the derivative of e^(2x)?', ['2e^(2x)', 'e^(2x)', '2e^x', 'e^(x/2)'], 0, 'Apply the chain rule: the derivative of e^u is e^u·u′, with u = 2x.'),
         q('At a smooth local minimum, what is usually true about the gradient?', ['It is zero', 'It points upward in every direction', 'It equals the Hessian', 'It is always one'], 0, 'At an unconstrained differentiable local minimum, the first derivatives are zero.'),
         q('What does the Jacobian of a vector-valued function contain?', ['Its first partial derivatives', 'Only its second derivatives', 'Only its integrals', 'Its eigenvalues only'], 0, 'The Jacobian arranges all first partial derivatives into a matrix.')
+      ]
+    },
+    {
+      id: 'functions-domains-graphs', title: 'Functions, Domains & Graphs',
+      questions: [
+        q('What is the domain of f(x)=x²?', ['All real numbers', 'x ≥ 0 only', 'x ≠ 0 only', 'x > 0 only'], 0, 'A polynomial is defined for every real input.'),
+        q('What is the domain of f(x)=−x?', ['All real numbers', 'x ≤ 0 only', 'x ≠ 0 only', 'x > 0 only'], 0, 'A linear function has no input restrictions.'),
+        q('What is the domain of f(x)=1/x²?', ['All real x except 0', 'All real numbers', 'x ≥ 0', 'x > 0 only'], 0, 'A denominator cannot equal zero, so x must not be 0.'),
+        q('What is the domain of f(x)=√x over the real numbers?', ['[0, ∞)', '(−∞, 0]', 'All real numbers', '(0, ∞)'], 0, 'The value under a real square root must be at least zero.'),
+        q('What is the domain of f(x)=ln(x)?', ['(0, ∞)', '[0, ∞)', 'All real numbers', 'All real x except 1'], 0, 'A real logarithm requires a positive input.'),
+        q('What is the domain of x² + ln(x)?', ['(0, ∞)', 'All real numbers', '[0, ∞)', 'All real x except 0'], 0, 'The polynomial allows all reals, but ln(x) requires x>0; take the intersection.'),
+        q('What is the domain of x²/ln(x)?', ['(0,1) ∪ (1,∞)', '(0,∞)', 'All real numbers except 1', '[0,∞)'], 0, 'Require x>0 for ln(x), and ln(x)≠0; ln(x)=0 at x=1.'),
+        q('If f(x)=x² and g(x)=eˣ, what is the domain of f(g(x))?', ['All real numbers', 'x > 0 only', 'x ≠ 0 only', 'x ≥ 0 only'], 0, 'The exponential and squaring functions both accept every real input.'),
+        q('What is the domain of ln(1/x)?', ['(0, ∞)', 'All real x except 0', '(−∞, 0)', '[0, ∞)'], 0, 'The logarithm needs 1/x>0, which happens exactly when x>0.'),
+        q('What is the domain of 1/ln(x)?', ['(0,1) ∪ (1,∞)', '(0,∞)', 'All real numbers except 1', '[0,∞)'], 0, 'Require x>0 and ln(x)≠0, so exclude x=1.'),
+        q('What is the domain of ln(1/x²)?', ['All real x except 0', '(0,∞)', 'All real numbers', 'x ≥ 0'], 0, 'For x≠0, 1/x² is positive, which is a valid logarithm input.'),
+        q('What is the range of sin(x) for real x?', ['[−1, 1]', '[0, 1]', 'All real numbers', '(−∞, 0]'], 0, 'Sine oscillates between −1 and 1, including both endpoints.'),
+        q('What is the value of cos(0)?', ['1', '0', '−1', 'Undefined'], 0, 'The cosine graph starts at height 1 when x=0.'),
+        q('Which way does the graph of y=−x² open?', ['Downward', 'Upward', 'It is a straight line', 'It is a circle'], 0, 'The negative leading coefficient reflects the usual upward parabola across the x-axis.'),
+        q('Which input is excluded from the domain of y=1/x²?', ['x=0', 'x=1', 'x=−1', 'No input is excluded'], 0, 'At x=0 the denominator is zero, so the function is undefined.'),
+        q('What is the domain of (x²−1)/(x−1)?', ['All real x except 1', 'All real numbers', 'x > 1', 'x ≥ 1'], 0, 'Even though the expression simplifies for x≠1, the original denominator excludes x=1.'),
+        q('What is the period of sin(x) in radians?', ['2π', 'π', '1', 'π/2'], 0, 'The sine graph repeats every 2π radians.'),
+        q('For a sum (f+g)(x), which inputs are allowed?', ['Inputs in both domains', 'Inputs in either domain only', 'Inputs where f(x)=g(x)', 'Only positive inputs'], 0, 'Both f(x) and g(x) must be defined, so the new domain is the intersection.')
       ]
     },
     {
