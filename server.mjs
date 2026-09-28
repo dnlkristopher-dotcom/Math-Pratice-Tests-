@@ -70,8 +70,21 @@ async function generateQuiz(req, res) {
     });
     const result = await upstream.json();
     if (!upstream.ok) {
-      console.error('OpenAI API request failed:', upstream.status, result.error?.type || 'unknown');
-      return json(res, 502, { error: upstream.status === 429 ? 'The AI quiz maker is busy. Please wait a little and try again.' : 'The AI could not make that quiz right now. Please try again.' });
+      const apiCode = result.error?.code || result.error?.type || 'unknown';
+      console.error('OpenAI API request failed:', upstream.status, apiCode);
+      if (upstream.status === 429 && /insufficient_quota|billing_hard_limit/i.test(apiCode)) {
+        return json(res, 429, { error: 'Your OpenAI API account has no available credit or has reached its spending limit. Check API billing and usage limits, then try again.' });
+      }
+      if (upstream.status === 429) {
+        return json(res, 429, { error: 'The AI service is temporarily rate-limited. Wait a minute, then try again. If it keeps happening, check your API usage limits.' });
+      }
+      if (upstream.status === 401) {
+        return json(res, 503, { error: 'The saved OpenAI API key was rejected. Check the OPENAI_API_KEY setting on the server.' });
+      }
+      if (upstream.status === 403) {
+        return json(res, 503, { error: 'This API project cannot use the selected model. Check the project’s model access and API billing.' });
+      }
+      return json(res, 502, { error: 'The AI could not make that quiz right now. Please try again.' });
     }
     const output = result.output?.flatMap(item => item.content || []).find(part => part.type === 'output_text')?.text;
     if (!output) return json(res, 502, { error: 'The AI returned no quiz. Please try again.' });
@@ -106,4 +119,4 @@ function json(res, status, value) {
 }
 function respond(res, status, value) { res.writeHead(status, { 'Content-Type': 'text/plain; charset=utf-8' }); res.end(value); }
 
-server.listen(port, () => console.log(`Gauss Quest is running at http://localhost:${port}`));
+server.listen(port, '0.0.0.0', () => console.log(`Gauss Quest is running on port ${port}`));
