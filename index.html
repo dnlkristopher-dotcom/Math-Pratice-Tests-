@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101526">
+  <meta name="description" content="Play math challenges or generate a practice quiz from any topic.">
+  <title>Gauss Quest — Make learning a game</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Gauss Quest home"><span class="brand-icon">∑</span><span>GAUSS<span class="brand-accent"> QUEST</span></span></a>
+      <div class="top-note"><span class="online-dot"></span> YOUR DAILY BRAIN BOOST</div>
+    </header>
+
+    <section id="setup-screen" class="screen setup-screen">
+      <div class="hero-copy">
+        <div class="eyebrow"><span>✦</span> YOUR NEXT BRAIN CHALLENGE</div>
+        <h1>Pick a topic.<br><span class="gradient-text">Play to learn.</span></h1>
+        <p>Practice Gaussian elimination or ask AI to make a fresh quiz about almost any school topic.</p>
+        <div class="feature-row"><span>⚡ Instant feedback</span><span>🤖 AI-made quizzes</span><span>🏆 Beat your best</span></div>
+      </div>
+      <div class="setup-card card">
+        <div class="card-kicker">READY, PLAYER ONE?</div>
+        <h2>Gaussian elimination</h2>
+        <label class="field-label" for="question-count">NUMBER OF QUESTIONS</label>
+        <div class="count-options" role="group" aria-label="Number of questions">
+          <button class="count-button selected" data-count="5" type="button" aria-pressed="true">5<span>QUICK</span></button>
+          <button class="count-button" data-count="10" type="button" aria-pressed="false">10<span>WARM UP</span></button>
+          <button class="count-button" data-count="15" type="button" aria-pressed="false">15<span>FOCUSED</span></button>
+          <button class="count-button" data-count="30" type="button" aria-pressed="false">30<span>MARATHON</span></button>
+        </div>
+        <button id="start-button" class="primary-button" type="button">START CHALLENGE <span>→</span></button>
+        <p class="small-note">Solve 3-variable systems. No timer, just practice.</p>
+      </div>
+      <div class="setup-card card ai-card">
+        <div class="card-kicker">MAKE A NEW PRACTICE QUIZ</div>
+        <h2>Choose any topic</h2>
+        <form id="topic-form" class="topic-form">
+          <label class="field-label" for="topic-input">WHAT DO YOU WANT TO PRACTICE?</label>
+          <input id="topic-input" class="topic-input" maxlength="160" placeholder="For example: fractions, planets, or photosynthesis" required>
+          <p class="small-note topic-note">AI will create questions with choices, answers, and explanations.</p>
+          <button id="generate-button" class="primary-button" type="submit">CREATE AI QUIZ <span>✦</span></button>
+          <p id="topic-error" class="topic-error hidden" role="status"></p>
+        </form>
+      </div>
+      <div class="math-orbit orbit-one">x + 2y − z = 4</div><div class="math-orbit orbit-two">⎡ 2  1  3 ⎤</div>
+    </section>
+
+    <section id="quiz-screen" class="screen quiz-screen hidden" aria-live="polite">
+      <div class="quiz-heading"><div><div class="eyebrow">✦ THE CHALLENGE</div><h1>Make your <span class="gradient-text">move.</span></h1></div><button id="quit-button" class="quiet-button" type="button">✕ <span>End run</span></button></div>
+      <div class="stats-row">
+        <div class="stat-box"><span class="stat-label">QUESTION</span><strong><span id="current-number">1</span><span class="muted"> / </span><span id="total-number">5</span></strong></div>
+        <div class="progress-wrap"><div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div><span id="progress-label">0% COMPLETE</span></div>
+        <div class="stat-box stat-right"><span class="stat-label">STREAK 🔥</span><strong id="streak-value">0</strong></div>
+        <div class="stat-box stat-right"><span class="stat-label">SCORE ⭐</span><strong id="score-value">0</strong></div>
+      </div>
+
+      <article class="question-card card">
+        <div class="question-top"><span id="difficulty-tag" class="difficulty-tag">LEVEL 1 · WARM-UP</span><span id="question-points" class="points-tag">+100 XP</span></div>
+        <p id="question-prompt" class="prompt">Use Gaussian elimination to solve the system. Enter the values of <i>x</i>, <i>y</i>, and <i>z</i>.</p>
+        <div id="equation-list" class="equations" aria-label="System of linear equations"></div>
+        <form id="answer-form" autocomplete="off">
+          <div id="answer-label-row" class="answer-label-row"><label class="field-label" for="answer-x">YOUR SOLUTION</label><span>Numbers, fractions, or decimals</span></div>
+          <div id="answer-fields" class="answer-fields">
+            <label class="answer-field"><span>x =</span><input id="answer-x" name="x" inputmode="decimal" autocomplete="off" aria-label="x value" required></label>
+            <label class="answer-field"><span>y =</span><input id="answer-y" name="y" inputmode="decimal" autocomplete="off" aria-label="y value" required></label>
+            <label class="answer-field"><span>z =</span><input id="answer-z" name="z" inputmode="decimal" autocomplete="off" aria-label="z value" required></label>
+            <button id="check-button" class="primary-button check-button" type="submit">CHECK ANSWER <span>↵</span></button>
+          </div>
+        </form>
+        <div id="feedback" class="feedback hidden" role="status"></div>
+      </article>
+      <p class="keyboard-hint">↵ <span>Press Enter to check your answer</span><span class="hint-separator">·</span> Answers are revealed after you submit</p>
+    </section>
+
+    <section id="result-screen" class="screen result-screen hidden" aria-live="polite">
+      <div id="result-panel" class="result-panel card">
+        <div id="result-icon" class="result-icon">🏆</div>
+        <div class="eyebrow">RUN COMPLETE</div>
+        <h1 id="result-title">Quest complete!</h1>
+        <p class="result-subtitle">You faced every system. Here’s how you did.</p>
+        <div class="final-score"><strong id="final-percent">0%</strong><span id="final-fraction">0 / 5 correct</span></div>
+        <div class="result-meter"><div id="result-meter-fill"></div></div>
+        <p id="result-message" class="result-message"></p>
+        <div class="result-stats"><div><strong id="result-xp">0</strong><span>XP EARNED</span></div><div><strong id="result-streak">0</strong><span>BEST STREAK 🔥</span></div></div>
+        <button id="play-again-button" class="primary-button" type="button">PLAY AGAIN <span>↻</span></button>
+        <button id="home-button" class="quiet-button home-button" type="button">Back to setup</button>
+      </div>
+    </section>
+    <footer class="footer"><span>GAUSS QUEST</span><span>Made for curious minds <span class="footer-star">✦</span></span></footer>
+  </main>
+</body>
+</html>
